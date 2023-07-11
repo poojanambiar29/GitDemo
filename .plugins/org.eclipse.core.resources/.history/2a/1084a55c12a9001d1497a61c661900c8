@@ -1,0 +1,74 @@
+import static io.restassured.RestAssured.*;
+
+import java.io.File;
+
+import org.testng.Assert;
+
+import io.restassured.RestAssured;
+import io.restassured.filter.session.SessionFilter;
+import io.restassured.path.json.JsonPath;
+
+public class jiratest {
+
+	public static void main(String[] args) 
+	
+	{
+		// TODO Auto-generated method stub
+
+	
+RestAssured.baseURI="http://localhost:8080";
+
+///login
+SessionFilter session =new SessionFilter();
+String response=given().relaxedHTTPSValidation()
+.header("Content-Type","application/json").
+body("{ \"username\": \"poojanambiar\", \"password\": \"City@12345\" }")
+.filter(session)
+.when().post("/rest/auth/1/session").then().extract().response().asString();
+String expectedmessage ="Hi how are you?";
+//add comment
+
+String commentresponse=given().log().all().pathParam("key","10106").header("Content-Type","application/json")
+.body("{\r\n"
+		+ "    \"body\": \""+expectedmessage+"\",\r\n"
+		+ "    \"visibility\": {\r\n"
+		+ "        \"type\": \"role\",\r\n"
+		+ "        \"value\": \"Administrators\"\r\n"
+		+ "    }\r\n"
+		+ "}").filter(session).when().post("/rest/api/2/issue/{key}/comment")
+.then().log().all().assertThat().statusCode(201).extract().response().asString();
+	
+JsonPath js= new JsonPath(commentresponse);
+String commentname= js.getString("id");
+System.out.println(commentname);
+//add attachment
+
+given().header("X-Atlassian-Token","no-check")      
+.filter(session).pathParam("key","10106").
+header("Content-Type","multipart/form-data")
+.multiPart("file",new File("jira.txt"))
+.when().post("rest/api/2/issue/{key}/attachments")
+.then().log().all().assertThat().statusCode(200);
+
+//Get
+
+String name=given().filter(session).log().all().pathParam("key", "10106")
+.queryParam("fields", "comment")
+.when().get("/rest/api/2/issue/{key}").then()
+.log().all()
+.extract().response().asString();
+
+JsonPath js1= new JsonPath(name);
+int getcomment = js1.getInt("fields.comment.comments.size()");
+for(int i=0;i<getcomment;i++)
+{
+	String Commentidissue = js1.get("fields.comment.comments["+i+"].id".toString());
+	if(Commentidissue.equalsIgnoreCase(commentname))
+	{
+		String message = js1.get("fields.comment.comments["+i+"].body".toString());
+		System.out.println(message);
+		Assert.assertEquals(message,expectedmessage);
+	}
+}
+	}
+}

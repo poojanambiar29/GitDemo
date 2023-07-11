@@ -1,0 +1,16 @@
+import org.testng.annotations.Test;
+
+import io.restassured.RestAssured;
+
+import io.restassured.RestAssured.*;
+
+public class DYNAMICJSON {
+
+	
+	
+	@Test
+	public static void  addbook()
+	{
+		RestAssured BaseURI=""
+	}
+}

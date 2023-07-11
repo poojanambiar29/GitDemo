@@ -1,0 +1,33 @@
+package demo;
+
+import file.payload;
+import io.restassured.path.json.JsonPath;
+
+public class complexjson {
+
+	public static void main(String[] args) {
+		
+	JsonPath js = new JsonPath(payload.courseprice());
+
+// print no. of courses	
+
+	int count = js.getInt("courses.size()");
+	System.out.println(count);
+	
+	//Print Purchase Amount
+	
+	int TotalAmount = js.getInt("dashboard.purchaseAmount");
+	System.out.println(TotalAmount);
+	
+	// Print Title of the first course
+	
+	String firstcoursetitle=js.get("courses[0].title");
+	System.out.println(firstcoursetitle);
+
+	 //4. Print All course titles and their respective Prices
+
+	// 5. Print no of copies sold by RPA Course
+
+	 //6. Verify if Sum of all Course prices matches with Purchase Amount
+}
+}

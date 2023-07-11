@@ -1,0 +1,12 @@
+package demo;
+
+import file.payload;
+import io.restassured.path.json.JsonPath;
+
+public class complexjson {
+
+	JsonPath js = new JsonPath(payload.courseprice());
+
+	
+
+}

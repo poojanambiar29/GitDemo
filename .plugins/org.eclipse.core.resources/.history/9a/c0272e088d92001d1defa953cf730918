@@ -1,0 +1,24 @@
+package demo;
+
+import io.restassured.RestAssured;
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+import files.payload;
+
+public class basics {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		RestAssured.baseURI="https://rahulshettyacademy.com";
+		String response=given().log().all().queryParam("key", "qaclick123")
+		.header("Content-Type","application/json")
+		.body(payload.AddPlace()).when().post("maps/api/place/add/json")
+		.then().statusCode(200).body("scope", equalTo("APP")).extract()
+		.response().asString();
+		
+		System.out.println(response);
+	}
+
+}

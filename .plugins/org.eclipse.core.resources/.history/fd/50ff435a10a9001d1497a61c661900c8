@@ -1,0 +1,26 @@
+import io.restassured.RestAssured;
+import static org.hamcrest.Matchers.*;
+import io.restassured.filter.session.SessionFilter;
+
+public class myownjira {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	
+
+	//login to jira
+	RestAssured BaseURI="http://localhost:8080";
+SessionFilter session = new SessionFilter();	
+String login= given().log().all().header("Content-Type","application/json")
+.body("{ \"username\": \"poojanambiar\", \"password\": \"City@12345\" }")
+.filter(session)
+.when().pathparam("/rest/auth/1/session")
+.then().log().all().assertthat().statuscode(200).extract()
+.response().asstring();
+	
+}
+
+
+	}
+}

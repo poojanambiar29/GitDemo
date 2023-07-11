@@ -1,0 +1,15 @@
+import io.restassured.RestAssured;
+
+public class myownjira {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	
+
+	//login to jira
+	RestAssured BaseURI="http://localhost:8080";
+	
+	
+}
+}

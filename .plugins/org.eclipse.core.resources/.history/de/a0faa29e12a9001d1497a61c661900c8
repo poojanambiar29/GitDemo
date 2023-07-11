@@ -1,0 +1,47 @@
+import static io.restassured.RestAssured.*;
+import io.restassured.RestAssured;
+import io.restassured.filter.session.SessionFilter;
+import io.restassured.path.json.JsonPath;
+
+public class myownjira {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		RestAssured.baseURI="http://localhost:8080";
+	
+
+	//login 
+		
+SessionFilter session = new SessionFilter();	
+String response= given().log().all().header("Content-Type","application/json")
+.body("{ \"username\": \"poojanambiar\", \"password\": \"City@12345\" }")
+.filter(session)
+.when().post("/rest/auth/1/session")
+.then().log().all().extract()
+.response().asString();
+	
+
+
+//adding a comment
+	
+	String addcomment= given().log().all().header("Content-Type","application/json")
+			.pathParam("key", "10105")
+			.body("{\r\n"
+					+ "    \"body\": \"Commenting from REST API\",\r\n"
+					+ "    \"visibility\": {\r\n"
+					+ "        \"type\": \"role\",\r\n"
+					+ "        \"value\": \"Administrators\"\r\n"
+					+ "    }\r\n"
+					+ "}").filter(session)
+			.when().post("rest/api/2/issue/{key}/comment")
+			.then().log().all().assertThat().statusCode(201)
+			.extract()
+			.response().asString();
+		
+	JsonPath js = new JsonPath(addcomment);
+	String newcomment =js.getString(addcomment);
+	System.out.println(newcomment);
+
+
+	}
+}

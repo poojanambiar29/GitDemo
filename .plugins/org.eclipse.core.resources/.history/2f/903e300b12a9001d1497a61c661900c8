@@ -1,0 +1,29 @@
+import static io.restassured.RestAssured.*;
+import io.restassured.RestAssured;
+import static org.hamcrest.Matchers.*;
+import io.restassured.filter.session.SessionFilter;
+
+public class myownjira {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		RestAssured.baseURI="http://localhost:8080";
+	
+
+	//login 
+		
+SessionFilter session = new SessionFilter();	
+String response= given().log().all().header("Content-Type","application/json")
+.body("{ \"username\": \"poojanambiar\", \"password\": \"City@12345\" }")
+.filter(session)
+.when().post("/rest/auth/1/session")
+.then().log().all().extract()
+.response().asString();
+	
+}
+
+
+
+
+	}
+}
